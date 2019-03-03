@@ -1,0 +1,48 @@
+{
+  "name": "rpgcore",
+  "version": "1.0.0",
+  "description": "A platform to build rpgcoin and blockchain-based applications.",
+  "author": "Silence <silence@rpgcoin.gg>",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha test/** --recursive"
+  },
+  "bin": {
+    "rpgcore": "./bin/rpgcore",
+    "rpgcored": "./bin/rpgcored"
+  },
+  "keywords": [
+    "rpgcoin",
+    "transaction",
+    "address",
+    "p2p",
+    "ecies",
+    "cryptocurrency",
+    "blockchain",
+    "payment",
+    "bip21",
+    "bip32",
+    "bip37",
+    "bip69",
+    "bip70",
+    "multisig"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RPGCoin/rpgcore.git"
+  },
+  "browser": {
+    "request": "browser-request"
+  },
+  "dependencies": {
+    "rpgcore-lib": "rpgcore-lib",
+    "rpgcore-node": "rpgcore-node",
+    "insight-api": "insight-api-rpg",
+    "insight-ui": "insight-ui-rpg"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "mocha": "^2.3.3"
+  }
+}

@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+var rpgcore = require('rpgcore-node/lib/cli/rpgcore');
+var path = require('path');
+var servicesPath = path.resolve(__dirname, '../');
+var additionalServices = ['insight-api', 'insight-ui'];
+rpgcore(servicesPath, additionalServices);

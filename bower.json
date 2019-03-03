@@ -1,0 +1,30 @@
+{
+  "name": "rpgcore",
+  "main": "./rpgcore.min.js",
+  "version": "1.0.0",
+  "homepage": "https://github.com/RPGCoin",
+  "authors": [
+    "Under"
+  ],
+  "description": "A pure, powerful core for your bitcoin project.",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "rpgcoin",
+    "rpgcore",
+    "btc",
+    "satoshi"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "CONTRIBUTING.md",
+    "gulpfile.js",
+    "lib",
+    "index.js",
+    "karma.conf.js",
+    "npm-shrinkwrap.json",
+    "test"
+  ]
+}

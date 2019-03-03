@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var path = require('path');
+var rpgcored = require('rpgcore-node/lib/cli/rpgcored');
+var servicesPath = path.resolve(__dirname, '../');
+var additionalServices = ['insight-api', 'insight-ui'];
+rpgcored(servicesPath, additionalServices);
