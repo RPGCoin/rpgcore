@@ -1,6 +1,6 @@
 {
   "name": "rpgcore",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A platform to build rpgcoin and blockchain-based applications.",
   "author": "Silence <silence@rpgcoin.gg>",
   "main": "index.js",
@@ -35,10 +35,10 @@
     "request": "browser-request"
   },
   "dependencies": {
-    "rpgcore-lib": "rpgcore-lib",
-    "rpgcore-node": "rpgcore-node",
-    "insight-api": "insight-api-rpg",
-    "insight-ui": "insight-ui-rpg"
+    "rpgcore-lib": "^1.0.3",
+    "rpgcore-node": "^1.0.9",
+    "insight-api-rpg": "^1.0.3",
+    "insight-ui-rpg": "^1.0.3"
   },
   "license": "MIT",
   "devDependencies": {
