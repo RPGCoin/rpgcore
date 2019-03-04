@@ -36,12 +36,6 @@ nvm install 10.5.0
 nvm use 10.5.0
 ```
 
-#### To fully update node and npm and have them persist across reboots in one command…
-
-```
-nvm install node && nvm alias default node && npm update npm -g
-```
-
 #### to use nvm and node as sudo, paste the following in one code block
 
 ```
