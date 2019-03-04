@@ -1,38 +1,97 @@
-RPGcore
-=======
+# RPGcore
+----
 
 This is RPGCoin's fork of Bitpay's Bitcore. It has a limited segwit support.
 
-----
-Getting Started
-=====================================
-Deploying RPGcore full-stack manually:
-----
-````
-sudo apt-get update
-sudo apt-get -y install curl git python3 make build-essential libzmq3-dev python2.7
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 
-#restart your shell/os
+----
+# Getting Started
+## Deploying RPGcore full-stack manually:
+## These instructions are for Ubuntu 18.04 Bionic
+----
+### Setup required build tools
 
+```
+sudo apt-get update && sudo apt-get upgrade
+sudo apt-get -y install curl git make build-essential libzmq3-dev python2.7
+```
+
+### Install and Configure Node Version Manager (NVM)
+
+```
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+
+export NVM_DIR="${XDG_CONFIG_HOME/:-$HOME/.}nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+source ~/.bashrc
+```
+
+#### Install node 10.5.0
+
+```
 nvm install 10.5.0
 nvm use 10.5.0
+```
 
-#install mongodb
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
+#### To fully update node and npm and have them persist across reboots in one command…
+
+```
+nvm install node && nvm alias default node && npm update npm -g
+```
+
+#### to use nvm and node as sudo, paste the following in one code block
+
+```
+n=$(which node); \
+n=${n%/bin/node}; \
+chmod -R 755 $n/bin/*; \
+sudo cp -r $n/{bin,lib,share} /usr/local
+```
+
+----
+### Install and Configure Mongodb
+
+#### Install mongodb
+
+```
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
 sudo apt-get update
 sudo apt-get install -y mongodb-org
-sudo systemctl enable mongod.service
+sudo service mongod start
+```
 
-#install rpgcore
+#### Setup Mongodb User
+To setup unique mongo credentials:
+
+```
+mongo
+>use rpg-api-livenet
+>db.createUser( { user: "test", pwd: "test1234", roles: [ "readWrite" ] } )
+>exit
+```
+
+Note down these credentials for next step
+
+----
+
+### Install rpgcore
+
+```
 sudo ln -s /usr/bin/python2.7 /usr/bin/python
 git clone https://github.com/RPGCoin/rpgcore.git
 cd rpgcore && git checkout master
 npm install -g --production
-````
+```
+----
+
+## Configuration
+
+### rpgcore-node.json
 Copy the following into a file named rpgcore-node.json and place it in ~/.rpgcore/ (be sure to customize username values(without angle brackets<>) and/or ports)
-````json
+
+```json
 {
   "network": "livenet",
   "port": 3001,
@@ -61,8 +120,8 @@ Copy the following into a file named rpgcore-node.json and place it in ~/.rpgcor
 		  "host": "127.0.0.1",
 		  "port": "27017",
 		  "database": "rpg-api-livenet",
-		  "user": "",
-		  "password": ""
+		  "user": "test",
+		  "password": "test1234"
 	  }
     },
     "rpgd": {
@@ -78,26 +137,22 @@ Copy the following into a file named rpgcore-node.json and place it in ~/.rpgcor
     }
   }
 }
-````
+```
+
 Quick note on allowing socket.io from other services. 
 - If you would like to have a seperate services be able to query your api with live updates, remove the "allowedOriginRegexp": setting and change "disablePolling": to false. 
 - "enableSocketRPC" should remain false unless you can control who is connecting to your socket.io service. 
 - The allowed OriginRegexp does not follow standard regex rules. If you have a subdomain, the format would be(without angle brackets<>):
-````
-"allowedOriginRegexp": "^https://<yoursubdomain>\\.<yourdomain>\\.<yourTLD>$",
-````
 
-To setup unique mongo credentials:
-````
-mongo
->use rpg-api-livenet
->db.createUser( { user: "test", pwd: "test1234", roles: [ "readWrite" ] } )
->exit
-````
-(then add these unique credentials to your rpgcore-node.json)
+```
+"allowedOriginRegexp": "^https://<yoursubdomain>\\.<yourdomain>\\.<yourTLD>$",
+```
+
+### rpg.conf
 
 Copy the following into a file named rpg.conf and place it in ~/.rpgcore/data
-````json
+
+```json
 server=1
 whitelist=127.0.0.1
 txindex=1
@@ -118,8 +173,31 @@ maxmempool=2000
 dbcache=1000
 maxtxfee=1.0
 dbmaxfilesize=64
-````
-Launch your copy of rpgcore:
+```
+
+### Configure RPCUsername and password
+
+edit the file located at ~/rpgcore/node_modules/rpgd-rpc/lib/index.js
+modify lines 9-12 to be sure your local ip, rpc port, username and password match what was configured earlier in rpgd.conf
+
+```js
+  this.host = opts.host || '127.0.0.1';
+  this.port = opts.port || 7210;
+  this.user = opts.user || 'user';
+  this.pass = opts.pass || 'pass';
+```
+
+### Avoid a bug with the bindings.gyp in node-x21s
+
+```
+cd ~/rpgcore/node_modules/node-x21s
+node-gyp configure
+node-gyp build
+cd ../../ && npm rebuild
+```
+
+----
+## Launch your copy of rpgcore:
 ````
 rpgcored
 ````
